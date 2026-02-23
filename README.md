@@ -30,4 +30,4 @@ An intelligent agent that can summarize PDFs, search the web, rank sources by cr
 - 📺 YouTube summarizer
 - 📊 CSV analyzer
 - 📃 Document comparer
-- 🖥️ React + FastAPI frontend
+- 🖥️ React + FastAPI 
