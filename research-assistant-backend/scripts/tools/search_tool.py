@@ -4,6 +4,7 @@ load_dotenv()
 from langchain.tools import tool
 from serpapi import GoogleSearch
 from sentence_transformers import CrossEncoder
+from tavily import TavilyClient
 import os
 
 # Initialize the ranking model
@@ -43,6 +44,35 @@ def search_serpapi(query: str) -> str:
             summary += f"   {snippet}\n"
             summary += f"   🔗 [Source]({url}) | Relevance: {score:.2f}\n\n"
         
+        return summary
+    except Exception as e:
+        return f"❌ **Search failed:** {str(e)}"
+
+@tool("search_web_tavily", return_direct=True)
+def search_tavily(query: str) -> str:
+    """Searches the web using Tavily and returns top 5 results with relevance scores."""
+    try:
+        client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
+        response = client.search(
+            query=query,
+            search_depth="advanced",
+            max_results=5,
+        )
+
+        results = response.get("results", [])
+        if not results:
+            return "❌ **No search results found**"
+
+        summary = "🔍 **Web Search Results:**\n\n"
+        for i, result in enumerate(results, start=1):
+            title = result.get("title", "")
+            snippet = result.get("content", "")
+            url = result.get("url", "")
+            score = result.get("score", 0.0)
+            summary += f"**{i}. {title}**\n"
+            summary += f"   {snippet}\n"
+            summary += f"   🔗 [Source]({url}) | Relevance: {score:.2f}\n\n"
+
         return summary
     except Exception as e:
         return f"❌ **Search failed:** {str(e)}"
