@@ -14,6 +14,7 @@ An intelligent agent that can summarize PDFs, search the web, rank sources by cr
     ```env
     OPENAI_API_KEY=your-openai-key
     SERPAPI_API_KEY=your-serpapi-key
+    TAVILY_API_KEY=your-tavily-key
     ```
 
 2. Install dependencies:

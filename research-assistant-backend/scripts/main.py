@@ -15,12 +15,14 @@ env_path = BACKEND_ROOT_DIR / ".env"
 load_dotenv(dotenv_path=env_path)
 
 serpapi_api_key = os.getenv("SERPAPI_API_KEY")
+tavily_api_key = os.getenv("TAVILY_API_KEY")
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
 print(f"SERPAPI_API_KEY loaded: {bool(serpapi_api_key)}")
+print(f"TAVILY_API_KEY loaded: {bool(tavily_api_key)}")
 print(f"OPENAI_API_KEY loaded: {bool(openai_api_key)}")
 
-from tools.search_tool import search_serpapi
+from tools.search_tool import search_serpapi, search_tavily
 from tools.pdf_tool import load_and_summarize
 from tools.pdf_compare import compare_documents
 from tools.rank_and_cite_tool import rank_and_cite
@@ -58,7 +60,7 @@ class ChatResponse(BaseModel):
     response: str
 
 def create_research_agent():
-    tools = [search_serpapi, load_and_summarize, compare_documents, rank_and_cite]
+    tools = [search_serpapi, search_tavily, load_and_summarize, compare_documents, rank_and_cite]
     agent_runnable = create_react_agent(llm, tools)
 
     graph = StateGraph(AgentState)
